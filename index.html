@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carros Bons e Baratos - Análise de Custos e Comparativo</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Configuração do Tailwind -->
+  <script src="scriptTailwind.js"></script>
+  <!-- Fontes do Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Botão de troca de tema -->
+  <button class="theme-toggle card" id="theme-toggle" aria-label="Alternar tema">
+    <i class="fas fa-moon" id="theme-icon"></i>
+  </button>
+
+  <!-- Container principal -->
+  <div class="min-h-screen py-8 px-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Cabeçalho -->
+      <div class="text-center mb-8 fade-in">
+        <h1 class="text-4xl font-bold mb-4">Carros Bons e Baratos - Análise de Custos e Comparativo</h1>
+        <p class="text-secondary text-lg max-w-3xl mx-auto">
+          Análise completa de custos para carros usados bem mantidos, incluindo modelos até R$15.000,00 e isentos de
+          IPVA.
+          Inclui combustível (1.000 km/mês), manutenção, seguro, IPVA e opções de financiamento.
+        </p>
+      </div>
+
+      <!-- Controles -->
+      <div class="card p-6 mb-8 fade-in fade-in-delay-1">
+        <div class="flex flex-wrap gap-4 items-center justify-between">
+          <!-- Filtros -->
+          <div class="flex flex-wrap gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Filtrar por Carro:</label>
+              <select id="carFilter" class="border border-color rounded-lg px-3 py-2 bg-transparent">
+                <option value="">Todos os carros</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Ordenar por:</label>
+              <select id="sortBy" class="border border-color rounded-lg px-3 py-2 bg-transparent">
+                <option value="name">Nome</option>
+                <option value="price">Preço</option>
+                <option value="monthly_cost">Custo Mensal</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Meses para quitar:</label>
+              <input id="mesesQuitar" type="number" min="1" max="120" value="6"
+                class="border border-color rounded-lg px-3 py-2 w-24 bg-transparent" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Entrada (R$):</label>
+              <input id="valorEntrada" type="number" min="0" step="100" value="5000"
+                class="border border-color rounded-lg px-3 py-2 w-32 bg-transparent" />
+            </div>
+          </div>
+
+          <!-- Períodos -->
+          <div class="flex gap-2">
+            <button class="period-tab active" data-period="mensal">Mensal</button>
+            <button class="period-tab" data-period="trimestral">Trimestral</button>
+            <button class="period-tab" data-period="semestral">Semestral</button>
+            <button class="period-tab" data-period="anual">Anual</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo -->
+      <div class="card p-6 mb-8 fade-in fade-in-delay-2">
+        <h2 class="text-2xl font-bold mb-4">Resumo Geral</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="summaryStats">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary" id="avgPrice">-</div>
+            <div class="text-secondary">Preço Médio</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary" id="minPrice">-</div>
+            <div class="text-secondary">Menor Preço</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary" id="maxPrice">-</div>
+            <div class="text-secondary">Maior Preço</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary" id="avgMonthlyCost">-</div>
+            <div class="text-secondary">Custo Mensal Médio</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de carros -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in fade-in-delay-3" id="carsGrid">
+        <!-- Carros serão inseridos aqui via JavaScript -->
+      </div>
+
+      <!-- Gráfico de comparação -->
+      <div class="card p-6 mt-8 fade-in fade-in-delay-3">
+        <h2 class="text-2xl font-bold mb-4">Comparativo de Custos (${currentPeriod.charAt(0).toUpperCase() +
+          currentPeriod.slice(1)})</h2>
+        <div style="height: 400px;">
+          <canvas id="carsChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Rodapé -->
+      <footer class="mt-12 text-center text-secondary">
+        <div class="card p-6">
+          <h2 class="text-2xl font-bold mb-4">Custo de Ônibus (Mensal)</h2>
+          <p class="mb-2">Considerando 24 dias de trabalho e 24 dias de faculdade por mês (ida e volta para ambos os
+            locais):</p>
+          <ul class="list-disc list-inside text-secondary mb-4">
+            <li>Valor da passagem normal: R$ 6,00</li>
+            <li>Valor da passagem universitária: R$ 3,00</li>
+          </ul>
+          <p class="text-lg font-bold">Custo Mensal Total de Ônibus: R$ 576,00</p>
+          <p class="mb-2 mt-4"><strong>Fontes:</strong> Dados coletados de marketplaces (Mercado Livre, OLX, Webmotors),
+            fóruns automotivos e estimativas de seguradoras.</p>
+          <p class="mb-2"><strong>Premissas:</strong> Carros bem mantidos, 1.000 km/mês, gasolina R$ 6,00/litro, etanol
+            R$ 4,00/litro, financiamento 60 meses a 1,5% a.m.</p>
+          <p><strong>Data:</strong> 10 de junho de 2025</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Script principal -->
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
