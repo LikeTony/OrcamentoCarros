@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carros Bons e Baratos - Análise de Custos e Comparativo</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuração do Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Tema escuro
+                        dark: {
+                            background: '#121212',
+                            surface: '#1E1E1E',
+                            surfaceHover: '#2A2A2A',
+                            primary: '#4F46E5',
+                            secondary: '#7C3AED',
+                            accent: '#06B6D4',
+                            textPrimary: '#FFFFFF',
+                            textSecondary: '#B3B3B3'
+                        },
+                        // Tema claro
+                        light: {
+                            background: '#F8FAFC',
+                            surface: '#FFFFFF',
+                            surfaceHover: '#F1F5F9',
+                            primary: '#4F46E5',
+                            secondary: '#7C3AED',
+                            accent: '#06B6D4',
+                            textPrimary: '#1E293B',
+                            textSecondary: '#64748B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fontes do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Tema claro (padrão) */
+        [data-theme="light"] {
+            background-color: #F8FAFC;
+            color: #1E293B;
+        }
+        
+        [data-theme="light"] .card {
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        [data-theme="light"] .btn-primary {
+            background-color: #4F46E5;
+            color: #FFFFFF;
+        }
+        
+        [data-theme="light"] .btn-primary:hover {
+            background-color: #4338CA;
+        }
+        
+        [data-theme="light"] .text-secondary {
+            color: #64748B;
+        }
+        
+        [data-theme="light"] .border-color {
+            border-color: #E2E8F0;
+        }
+        
+        /* Tema escuro */
+        [data-theme="dark"] {
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        
+        [data-theme="dark"] .card {
+            background-color: #1E1E1E;
+            border: 1px solid #374151;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        [data-theme="dark"] .card:hover {
+            background-color: #2A2A2A;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+        
+        [data-theme="dark"] .btn-primary {
+            background-color: #4F46E5;
+            color: #FFFFFF;
+        }
+        
+        [data-theme="dark"] .btn-primary:hover {
+            background-color: #4338CA;
+        }
+        
+        [data-theme="dark"] .text-secondary {
+            color: #B3B3B3;
+        }
+        
+        [data-theme="dark"] .border-color {
+            border-color: #374151;
+        }
+        
+        /* Estilos comuns */
+        .card {
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .car-image {
+            width: 100%;
+            height: 200px;
+            background: url('car_image.jpg') center/cover;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+        
+        .period-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .period-tab.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        
+        .period-tab:not(.active) {
+            background-color: #F1F5F9;
+            color: #64748B;
+        }
+        
+        [data-theme="dark"] .period-tab:not(.active) {
+            background-color: #374151;
+            color: #B3B3B3;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
+        [data-theme="dark"] .cost-item {
+            border-bottom-color: #374151;
+        }
+        
+        .cost-item:last-child {
+            border-bottom: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .fade-in-delay-1 { animation-delay: 0.1s; }
+        .fade-in-delay-2 { animation-delay: 0.2s; }
+        .fade-in-delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Botão de troca de tema -->
+    <button class="theme-toggle card" id="theme-toggle" aria-label="Alternar tema">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    
+    <!-- Container principal -->
+    <div class="min-h-screen py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Cabeçalho -->
+            <div class="text-center mb-8 fade-in">
+                <h1 class="text-4xl font-bold mb-4">Carros Bons e Baratos - Análise de Custos e Comparativo</h1>
+                <p class="text-secondary text-lg max-w-3xl mx-auto">
+                    Análise completa de custos para carros usados bem mantidos, incluindo modelos até R$15.000,00 e isentos de IPVA.
+                    Inclui combustível (1.000 km/mês), manutenção, seguro, IPVA e opções de financiamento.
+                </p>
+            </div>
+            
+            <!-- Controles -->
+            <div class="card p-6 mb-8 fade-in fade-in-delay-1">
+                <div class="flex flex-wrap gap-4 items-center justify-between">
+                    <!-- Filtros -->
+                    <div class="flex flex-wrap gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Filtrar por Carro:</label>
+                            <select id="carFilter" class="border border-color rounded-lg px-3 py-2 bg-transparent">
+                                <option value="">Todos os carros</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Ordenar por:</label>
+                            <select id="sortBy" class="border border-color rounded-lg px-3 py-2 bg-transparent">
+                                <option value="name">Nome</option>
+                                <option value="price">Preço</option>
+                                <option value="monthly_cost">Custo Mensal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Meses para quitar:</label>
+                            <input id="mesesQuitar" type="number" min="1" max="120" value="60" class="border border-color rounded-lg px-3 py-2 w-24 bg-transparent" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Entrada (R$):</label>
+                            <input id="valorEntrada" type="number" min="0" step="100" value="5000" class="border border-color rounded-lg px-3 py-2 w-32 bg-transparent" />
+                        </div>
+                    </div>
+                    
+                    <!-- Períodos -->
+                    <div class="flex gap-2">
+                        <button class="period-tab active" data-period="mensal">Mensal</button>
+                        <button class="period-tab" data-period="trimestral">Trimestral</button>
+                        <button class="period-tab" data-period="semestral">Semestral</button>
+                        <button class="period-tab" data-period="anual">Anual</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resumo -->
+            <div class="card p-6 mb-8 fade-in fade-in-delay-2">
+                <h2 class="text-2xl font-bold mb-4">Resumo Geral</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="summaryStats">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary" id="avgPrice">-</div>
+                        <div class="text-secondary">Preço Médio</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary" id="minPrice">-</div>
+                        <div class="text-secondary">Menor Preço</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary" id="maxPrice">-</div>
+                        <div class="text-secondary">Maior Preço</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary" id="avgMonthlyCost">-</div>
+                        <div class="text-secondary">Custo Mensal Médio</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grid de carros -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in fade-in-delay-3" id="carsGrid">
+                <!-- Carros serão inseridos aqui via JavaScript -->
+            </div>
+
+            <!-- Gráfico de comparação -->
+            <div class="card p-6 mt-8 fade-in fade-in-delay-3">
+                <h2 class="text-2xl font-bold mb-4">Comparativo de Custos (${currentPeriod.charAt(0).toUpperCase() + currentPeriod.slice(1)})</h2>
+                <div style="height: 400px;">
+                    <canvas id="carsChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Rodapé -->
+            <footer class="mt-12 text-center text-secondary">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold mb-4">Custo de Ônibus (Mensal)</h2>
+                    <p class="mb-2">Considerando 24 dias de trabalho e 24 dias de faculdade por mês (ida e volta para ambos os locais):</p>
+                    <ul class="list-disc list-inside text-secondary mb-4">
+                        <li>Valor da passagem normal: R$ 6,00</li>
+                        <li>Valor da passagem universitária: R$ 3,00</li>
+                    </ul>
+                    <p class="text-lg font-bold">Custo Mensal Total de Ônibus: R$ 576,00</p>
+                    <p class="mb-2 mt-4"><strong>Fontes:</strong> Dados coletados de marketplaces (Mercado Livre, OLX, Webmotors), fóruns automotivos e estimativas de seguradoras.</p>
+                    <p class="mb-2"><strong>Premissas:</strong> Carros bem mantidos, 1.000 km/mês, gasolina R$ 6,00/litro, etanol R$ 4,00/litro, financiamento 60 meses a 1,5% a.m.</p>
+                    <p><strong>Data:</strong> 10 de junho de 2025</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Script principal -->
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let carsData = [];
+        let filteredCars = [];
+        let currentPeriod = 'mensal';
+        let carsChart = null;
+        let mesesQuitar = 60;
+        let valorEntrada = 5000;
+
+        // Carregar dados dos carros
+        async function loadCarsData() {
+            try {
+                const response = await fetch('filtered_car_data.json'); // Alterado para filtered_car_data.json
+                carsData = await response.json();
+                filteredCars = [...carsData];
+                populateCarFilter();
+                updateSummary();
+                renderCars();
+                renderChart();
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                document.getElementById('carsGrid').innerHTML = '<p class="text-center col-span-full">Erro ao carregar dados dos carros.</p>';
+            }
+        }
+
+        // Preencher filtro de carros
+        function populateCarFilter() {
+            const select = document.getElementById('carFilter');
+            select.innerHTML = '<option value="">Todos os carros</option>';
+            carsData.forEach(car => {
+                const option = document.createElement('option');
+                option.value = car.name;
+                option.textContent = car.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Formatar valor monetário
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        // Calcula parcela de financiamento com entrada e meses customizados
+        function calcularParcelaFinanciamento(preco, entrada, meses, taxa = 0.015) {
+            // Fórmula de Price: P = V * [i*(1+i)^n] / [(1+i)^n - 1]
+            const valorFinanciado = Math.max(preco - entrada, 0);
+            const i = taxa;
+            const n = meses;
+            if (valorFinanciado === 0 || n === 0) return 0;
+            const parcela = valorFinanciado * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+            return parcela;
+        }
+
+        // Obter valor do período atual (ajustado para considerar meses/entrada customizados)
+        // Retorna objeto detalhado com todos os custos e totais
+        function getPeriodTotals(car, periodo) {
+            let entrada = Number(valorEntrada) || 0;
+            let meses = Number(mesesQuitar) || 1;
+            let taxa = 0.015; // 1,5% a.m.
+
+            // Valor financiado e parcela
+            const precoMedio = Number(car.preco_medio) || 0;
+            const valorFinanciado = Math.max(precoMedio - entrada, 0);
+            const parcela = calcularParcelaFinanciamento(precoMedio, entrada, meses, taxa);
+
+            // Período em meses
+            let fatorPeriodo = 1;
+            switch(periodo) {
+                case 'trimestral': fatorPeriodo = 3; break;
+                case 'semestral': fatorPeriodo = 6; break;
+                case 'anual': fatorPeriodo = 12; break;
+                default: fatorPeriodo = 1;
+            }
+
+            // Custos fixos mensais (garanta que todos são números)
+            const combustivel = car.combustivel_mensal_min || 0;
+            const manutencao = car.manutencao_mensal_provided || 0;
+            const seguro = car.seguro_mensal_calculated || 0;
+            const ipva = car.ipva_mensal_calculated || 0;
+            const lavagem = car.lavagem_mensal || 0;
+            const manutencao_preventiva = car.manutencao_preventiva_mensal || 0;
+            const imprevistos = car.imprevistos_mensal || 0;
+            const melhorias = car.melhorias_mensal || 0;
+            const multas = car.multas_mensal || 0;
+            const estacionamento_pedagio = car.estacionamento_pedagio_mensal || 0;
+
+            const totalMensal = combustivel + manutencao + seguro + ipva + lavagem + manutencao_preventiva + imprevistos + melhorias + multas + estacionamento_pedagio + parcela;
+
+            return {
+                combustivel: combustivel * fatorPeriodo,
+                manutencao: manutencao * fatorPeriodo,
+                seguro: seguro * fatorPeriodo,
+                ipva: ipva * fatorPeriodo,
+                financiamento: parcela * fatorPeriodo,
+                lavagem: lavagem * fatorPeriodo,
+                manutencao_preventiva: manutencao_preventiva * fatorPeriodo,
+                imprevistos: imprevistos * fatorPeriodo,
+                melhorias: melhorias * fatorPeriodo,
+                multas: multas * fatorPeriodo,
+                estacionamento_pedagio: estacionamento_pedagio * fatorPeriodo,
+                total: totalMensal * fatorPeriodo
+            };
+        }
+
+        // Atualizar resumo
+        function updateSummary() {
+            if (filteredCars.length === 0) {
+                document.getElementById('avgPrice').textContent = '-';
+                document.getElementById('minPrice').textContent = '-';
+                document.getElementById('maxPrice').textContent = '-';
+                document.getElementById('avgMonthlyCost').textContent = '-';
+                return;
+            }
+
+            const prices = filteredCars.map(car => car.preco_medio);
+            const monthlyCosts = filteredCars.map(car => getPeriodTotals(car, 'mensal').total);
+
+            const avgPrice = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const avgMonthlyCost = monthlyCosts.reduce((sum, cost) => sum + cost, 0) / monthlyCosts.length;
+
+            document.getElementById('avgPrice').textContent = formatCurrency(avgPrice);
+            document.getElementById('minPrice').textContent = formatCurrency(minPrice);
+            document.getElementById('maxPrice').textContent = formatCurrency(maxPrice);
+            document.getElementById('avgMonthlyCost').textContent = formatCurrency(avgMonthlyCost);
+        }
+
+        // Renderizar carros
+        function renderCars() {
+            const carsGrid = document.getElementById('carsGrid');
+            carsGrid.innerHTML = '';
+
+            const selectedCarName = document.getElementById('carFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let carsToRender = selectedCarName ? carsData.filter(car => car.name === selectedCarName) : [...carsData];
+
+            // Ordenar carros
+            carsToRender.sort((a, b) => {
+                if (sortBy === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'price') {
+                    return a.preco_medio - b.preco_medio;
+                } else if (sortBy === 'monthly_cost') {
+                    return getPeriodTotals(a, 'mensal').total - getPeriodTotals(b, 'mensal').total;
+                }
+                return 0;
+            });
+
+            if (carsToRender.length === 0) {
+                carsGrid.innerHTML = '<p class="text-center col-span-full">Nenhum carro encontrado com os filtros selecionados.</p>';
+                return;
+            }
+
+            carsToRender.forEach((car, index) => {
+                const totals = getPeriodTotals(car, currentPeriod);
+                const ipvaExemptText = car.ipva_exempt ? '<span class="text-green-500 font-semibold">(ISENTO)</span>' : '';
+                const imageUrl = `./imagens/${car.name.toLowerCase().replace(/ /g, '_').replace(/\./g, '')}.jpg`;
+
+                const carCard = `
+                    <div class="card p-6 fade-in fade-in-delay-${index % 3}">
+                        <div class="car-image" style="background-image: url('${imageUrl}');"></div>
+                        <h2 class="text-xl font-bold mb-2">${car.name}</h2>
+                        <p class="text-secondary mb-4">Preço médio: ${formatCurrency(car.preco_medio)}</p>
+                        
+                        <h3 class="text-lg font-semibold mb-2">Custos ${currentPeriod.charAt(0).toUpperCase() + currentPeriod.slice(1)}</h3>
+                        <div class="space-y-2 mb-4">
+                            <div class="cost-item">
+                                <span>Combustível:</span>
+                                <span>${formatCurrency(totals.combustivel)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Manutenção:</span>
+                                <span>${formatCurrency(totals.manutencao)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Seguro:</span>
+                                <span>${formatCurrency(totals.seguro)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>IPVA:</span>
+                                <span>${formatCurrency(totals.ipva)} ${ipvaExemptText}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Financiamento:</span>
+                                <span>${formatCurrency(totals.financiamento)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Lavagem:</span>
+                                <span>${formatCurrency(totals.lavagem)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Manutenção Preventiva:</span>
+                                <span>${formatCurrency(totals.manutencao_preventiva)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Imprevistos:</span>
+                                <span>${formatCurrency(totals.imprevistos)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Melhorias:</span>
+                                <span>${formatCurrency(totals.melhorias)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Multas:</span>
+                                <span>${formatCurrency(totals.multas)}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Estacionamento/Pedágio:</span>
+                                <span>${formatCurrency(totals.estacionamento_pedagio)}</span>
+                            </div>
+                            <div class="cost-item font-bold text-lg">
+                                <span>Total ${currentPeriod.charAt(0).toUpperCase() + currentPeriod.slice(1)}:</span>
+                                <span>${formatCurrency(totals.total)}</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold mb-2">Prós</h3>
+                        <ul class="list-disc list-inside text-secondary mb-4">
+                            ${(car.pros || []).map(pro => `<li>${pro}</li>`).join('')}
+                        </ul>
+                        
+                        <h3 class="text-lg font-semibold mb-2">Contras</h3>
+                        <ul class="list-disc list-inside text-secondary">
+                            ${(car.cons || []).map(con => `<li>${con}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                carsGrid.innerHTML += carCard;
+            });
+        }
+
+        // Renderizar gráfico
+        function renderChart() {
+            const ctx = document.getElementById('carsChart').getContext('2d');
+            if (carsChart) {
+                carsChart.destroy();
+            }
+
+            const sortBy = document.getElementById('sortBy').value;
+            let sortedCarsForChart = [...filteredCars];
+
+            // Ordenar carros para o gráfico de acordo com a seleção do usuário
+            sortedCarsForChart.sort((a, b) => {
+                if (sortBy === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'price') {
+                    return a.preco_medio - b.preco_medio;
+                } else if (sortBy === 'monthly_cost') {
+                    return getPeriodTotals(a, 'mensal').total - getPeriodTotals(b, 'mensal').total;
+                }
+                return 0;
+            });
+
+            const labels = sortedCarsForChart.map(car => car.name);
+            const data = sortedCarsForChart.map(car => getPeriodTotals(car, currentPeriod).total);
+
+            carsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Custo ${currentPeriod.charAt(0).toUpperCase() + currentPeriod.slice(1)} Total`,
+                        data: data,
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Custo Total (R$)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Modelo do Carro'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += formatCurrency(context.raw);
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            document.getElementById('theme-icon').className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        });
+
+        document.getElementById('carFilter').addEventListener('change', () => {
+            const selectedCarName = document.getElementById('carFilter').value;
+            filteredCars = selectedCarName ? carsData.filter(car => car.name === selectedCarName) : [...carsData];
+            updateSummary();
+            renderCars();
+            renderChart();
+        });
+
+        document.getElementById('sortBy').addEventListener('change', () => {
+            renderCars();
+            renderChart();
+        });
+
+        document.querySelectorAll('.period-tab').forEach(button => {
+            button.addEventListener('click', (event) => {
+                document.querySelectorAll('.period-tab').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                currentPeriod = event.target.dataset.period;
+                document.querySelector('.card.p-6.mt-8 h2').textContent = `Comparativo de Custos (${currentPeriod.charAt(0).toUpperCase() + currentPeriod.slice(1)})`;
+                renderCars();
+                renderChart();
+            });
+        });
+
+        document.getElementById('mesesQuitar').addEventListener('input', (event) => {
+            mesesQuitar = Number(event.target.value);
+            if (mesesQuitar < 1) mesesQuitar = 1;
+            if (mesesQuitar > 120) mesesQuitar = 120;
+            renderCars();
+            renderChart();
+            updateSummary();
+        });
+
+        document.getElementById('valorEntrada').addEventListener('input', (event) => {
+            valorEntrada = Number(event.target.value);
+            if (valorEntrada < 0) valorEntrada = 0;
+            renderCars();
+            renderChart();
+            updateSummary();
+        });
+
+        // Carregar dados ao iniciar
+        loadCarsData();
+    </script>
+</body>
+</html>
+
